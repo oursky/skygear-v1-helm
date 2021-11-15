@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "skygear.skygear-server.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "skygear.labels" . | nindent 4 }}
+    app: {{ include "skygear.skygear-server.name" . | quote }}
+  ports:
+    {{- include "skygear.skygear-server.service.ports" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "skygear.skygear-server.master.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "skygear.labels" . | nindent 4 }}
+    app: {{ include "skygear.skygear-server.name" . | quote }}
+    variant: {{ include "skygear.skygear-server.master.name" . | quote }}
+  ports:
+    {{- include "skygear.skygear-server.service.ports" . | nindent 4 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "skygear.skygear-server.master.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+    app: {{ include "skygear.skygear-server.name" . | quote }}
+    variant: {{ include "skygear.skygear-server.master.name" . | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "skygear.labels" . | nindent 6 }}
+      app: {{ include "skygear.skygear-server.name" . | quote }}
+      variant: {{ include "skygear.skygear-server.master.name" . | quote }}
+  template:
+    metadata:
+      labels:
+        {{- include "skygear.labels" . | nindent 8 }}
+        app: {{ include "skygear.skygear-server.name" . | quote }}
+        variant: {{ include "skygear.skygear-server.master.name" . | quote }}
+    spec:
+      containers:
+      - name: skygear-server
+        image: {{ .Values.skygearServer.image | quote }}
+        ports:
+        {{- include "skygear.skygear-server.ports" . | nindent 8 }}
+        env:
+        {{- include "skygear.common.env-vars" . | nindent 8 }}
+        {{- include "skygear.skygear-server.env-vars" . | nindent 8 }}
+        resources:
+          {{- toYaml .Values.skygearServer.resources | nindent 10 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "skygear.skygear-server.slave.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+    app: {{ include "skygear.skygear-server.name" . | quote }}
+    variant: {{ include "skygear.skygear-server.slave.name" . | quote }}
+spec:
+  replicas: {{ .Values.skygearServer.slaveCount }}
+  selector:
+    matchLabels:
+      {{- include "skygear.labels" . | nindent 6 }}
+      app: {{ include "skygear.skygear-server.name" . | quote }}
+      variant: {{ include "skygear.skygear-server.slave.name" . | quote }}
+  template:
+    metadata:
+      labels:
+        {{- include "skygear.labels" . | nindent 8 }}
+        app: {{ include "skygear.skygear-server.name" . | quote }}
+        variant: {{ include "skygear.skygear-server.slave.name" . | quote }}
+    spec:
+      containers:
+      - name: skygear-server
+        image: {{ .Values.skygearServer.image | quote }}
+        ports:
+        {{- include "skygear.skygear-server.ports" . | nindent 8 }}
+        env:
+        {{- include "skygear.common.env-vars" . | nindent 8 }}
+        {{- include "skygear.skygear-server.env-vars" . | nindent 8 }}
+        {{- if .Values.skygearServer.env }}
+        {{- toYaml .Values.skygearServer.env | nindent 8 }}
+        {{- end }}
+        - name: SLAVE
+          value: "YES"
+        {{- if (or .Values.skygearServer.envFromConfigMapName .Values.skygearServer.envFromSecretName) }}
+        envFrom:
+        {{- if .Values.skygearServer.envFromConfigMapName }}
+        - configMapRef:
+            name: {{ .Values.skygearServer.envFromConfigMapName | quote }}
+        {{- end }}
+        {{- if .Values.skygearServer.envFromSecretName }}
+        - secretRef:
+            name: {{ .Values.skygearServer.envFromSecretName | quote }}
+        {{- end }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.skygearServer.resources | nindent 10 }}

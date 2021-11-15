@@ -1,0 +1,77 @@
+{{- if .Values.cms.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "skygear.cms.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "skygear.labels" . | nindent 4 }}
+    app: {{ include "skygear.cms.name" . | quote }}
+  ports:
+  - protocol: TCP
+    port: 5001
+    targetPort: 5001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "skygear.cms.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.cms.replicas }}
+  selector:
+    matchLabels:
+      {{- include "skygear.labels" . | nindent 6 }}
+      app: {{ include "skygear.cms.name" . | quote }}
+  template:
+    metadata:
+      labels:
+        {{- include "skygear.labels" . | nindent 8 }}
+        app: {{ include "skygear.cms.name" . | quote }}
+    spec:
+      containers:
+      - name: cms
+        image: {{ .Values.cms.image | quote }}
+        ports:
+        - protocol: TCP
+          containerPort: 5001
+        env:
+        {{- include "skygear.common.env-vars" . | nindent 8 }}
+        {{- include "skygear.plugin.env-vars" . | nindent 8 }}
+        - name: HTTP_ADDR
+          value: "0.0.0.0:5001"
+        - name: SKYGEAR_ADDRESS
+          value: tcp://{{ include "skygear.skygear-server.name" . }}:5001
+        - name: CMS_SKYGEAR_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "skygear.secret.name" . | quote }}
+              key: API_KEY
+        - name: CMS_AUTH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "skygear.secret.name" . | quote }}
+              key: TOKEN_STORE_SECRET
+        - name: CLIENT_SKYGEAR_ENDPOINT
+          value: https://{{ .Values.publicHost }}
+        - name: CMS_SKYGEAR_ENDPOINT
+          value: https://{{ .Values.publicHost }}/cms-api
+        - name: CMS_PUBLIC_URL
+          value: https://{{ .Values.publicHost }}/cms
+        - name: CMS_STATIC_URL
+          value: {{ .Values.cms.staticURL | quote }}
+        - name: CMS_CONFIG_FILE_URL
+          {{- if .Values.cms.configFileURL }}
+          value: {{ .Values.cms.configFileURL | quote }}
+          {{- else }}
+          value: https://{{ .Values.publicHost }}/static/cms-config.yaml
+          {{- end }}
+        {{- if .Values.cms.env }}
+        {{- toYaml .Values.cms.env | nindent 8 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.cms.resources | nindent 10 }}
+{{- end }}

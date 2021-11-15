@@ -1,0 +1,55 @@
+{{- if .Values.chat.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "skygear.chat.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "skygear.labels" . | nindent 4 }}
+    app: {{ include "skygear.chat.name" . | quote }}
+  ports:
+  - protocol: TCP
+    port: 5002
+    targetPort: 5002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "skygear.chat.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.chat.replicas }}
+  selector:
+    matchLabels:
+      {{- include "skygear.labels" . | nindent 6 }}
+      app: {{ include "skygear.chat.name" . | quote }}
+  template:
+    metadata:
+      labels:
+        {{- include "skygear.labels" . | nindent 8 }}
+        app: {{ include "skygear.chat.name" . | quote }}
+    spec:
+      containers:
+      - name: chat
+        image: {{ .Values.chat.image | quote }}
+        ports:
+        - protocol: TCP
+          containerPort: 5002
+        env:
+        {{- include "skygear.common.env-vars" . | nindent 8 }}
+        {{- include "skygear.plugin.env-vars" . | nindent 8 }}
+        - name: HTTP_ADDR
+          value: "0.0.0.0:5002"
+        - name: SKYGEAR_ADDRESS
+          value: tcp://{{ include "skygear.skygear-server.name" . }}:5002
+        - name: PUBSUB_URL
+          value: wss://{{ .Values.publicHost }}/pubsub
+        {{- if .Values.chat.env }}
+        {{- toYaml .Values.chat.env | nindent 8 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.chat.resources | nindent 10 }}
+{{- end }}

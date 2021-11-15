@@ -1,0 +1,133 @@
+appName: __replace__
+publicHost: __replace__
+apiKey: __replace__
+masterKey: __replace__
+tokenStoreSecret: __replace__
+
+customTokenSecret: ""
+fcmSecretName: ""
+apnsSecretName: ""
+
+database:
+  host: __replace__
+  port: 5432
+  username: __replace__
+  password: __replace__
+  name: __replace__
+
+skygearServer:
+  image: quay.io/skygeario/skygear-server:v1.7.3
+  logLevel: "DEBUG"
+  devMode: "NO"
+  slaveCount: 1
+  env: []
+  envFromConfigMapName: ""
+  envFromSecretName: ""
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+
+pgbouncer:
+  image: gcr.io/oursky-kube/pgbouncer:git-d292e5e7c1
+  poolSizeSession: "5"
+  poolSizeTransaction: "5"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+
+forgotpassword:
+  enabled: false
+  image: ""
+  replicas: 1
+  smtp:
+    host: __replace__
+    port: 587
+    mode: "tls"
+    login: __replace__
+    password: ""
+  configMapName: ""
+  env: []
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "128Mi"
+
+chat:
+  enabled: false
+  image: ""
+  replicas: 1
+  env: []
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "128Mi"
+
+cms:
+  enabled: false
+  image: ""
+  replicas: 1
+  staticURL: https://code.skygear.io/js/content-manager/1.7.2-6/
+  configFileURL: ""
+  env: []
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "128Mi"
+
+staticfiles:
+  enabled: true
+  image: nginx:1.20.1
+  replicas: 1
+  configMapName: ""
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "128Mi"
+
+pluginpython:
+  enabled: false
+  image: ""
+  env: []
+  envFromConfigMapName: ""
+  envFromSecretName: ""
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "128Mi"
+
+pluginnodejs:
+  enabled: false
+  image: ""
+  env: []
+  envFromConfigMapName: ""
+  envFromSecretName: ""
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "128Mi"

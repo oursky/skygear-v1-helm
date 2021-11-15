@@ -1,0 +1,64 @@
+{{- if .Values.pluginpython.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "skygear.pluginpython.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "skygear.labels" . | nindent 4 }}
+    app: {{ include "skygear.pluginpython.name" . | quote }}
+  ports:
+  - protocol: TCP
+    port: 5003
+    targetPort: 5003
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "skygear.pluginpython.name" . | quote }}
+  labels:
+    {{- include "skygear.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.pluginpython.replicas }}
+  selector:
+    matchLabels:
+      {{- include "skygear.labels" . | nindent 6 }}
+      app: {{ include "skygear.pluginpython.name" . | quote }}
+  template:
+    metadata:
+      labels:
+        {{- include "skygear.labels" . | nindent 8 }}
+        app: {{ include "skygear.pluginpython.name" . | quote }}
+    spec:
+      containers:
+      - name: pluginpython
+        image: {{ .Values.pluginpython.image | quote }}
+        ports:
+        - protocol: TCP
+          containerPort: 5003
+        env:
+        {{- include "skygear.common.env-vars" . | nindent 8 }}
+        {{- include "skygear.plugin.env-vars" . | nindent 8 }}
+        - name: HTTP_ADDR
+          value: "0.0.0.0:5003"
+        - name: SKYGEAR_ADDRESS
+          value: tcp://{{ include "skygear.skygear-server.name" . }}:5003
+        {{- if .Values.pluginpython.env }}
+        {{- toYaml .Values.pluginpython.env | nindent 8 }}
+        {{- end }}
+        {{- if (or .Values.pluginpython.envFromConfigMapName .Values.pluginpython.envFromSecretName) }}
+        envFrom:
+        {{- if .Values.pluginpython.envFromConfigMapName }}
+        - configMapRef:
+            name: {{ .Values.pluginpython.envFromConfigMapName | quote }}
+        {{- end }}
+        {{- if .Values.pluginpython.envFromSecretName }}
+        - secretRef:
+            name: {{ .Values.pluginpython.envFromSecretName | quote }}
+        {{- end }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.pluginpython.resources | nindent 10 }}
+{{- end }}
