@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  skygear:
+  - apiVersion: v2
+    appVersion: 1.x
+    created: "2021-11-15T17:31:31.611736+08:00"
+    description: A Helm chart for Kubernetes
+    digest: a3701546de7cbaa520ec6b47894d9f37b77d8bc0da6e2608f372828c4d6019c8
+    name: skygear
+    type: application
+    urls:
+    - https://github.com/oursky/skygear-v1-helm/releases/download/skygear-0.1.0/skygear-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-11-15T17:31:31.13679+08:00"
