@@ -17,7 +17,7 @@ database:
 
 skygearServer:
   image: quay.io/skygeario/skygear-server:v1.7.3
-  logLevel: "DEBUG"
+  logLevel: "error"
   devMode: "NO"
   slaveCount: 1
   env: []
