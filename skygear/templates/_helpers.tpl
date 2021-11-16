@@ -150,7 +150,8 @@
 - name: HTTP
   value: "true"
 - name: SKYGEAR_ENDPOINT
-  value: http://{{ include "skygear.skygear-server.name" . }}:3000
+  {{/* It must be the master server because the plugin use pubsub */}}
+  value: http://{{ include "skygear.skygear-server.master.name" . }}:3000
 - name: DATABASE_URL
   valueFrom:
     secretKeyRef:
