@@ -3,7 +3,17 @@ entries:
   skygear:
   - apiVersion: v2
     appVersion: 1.x
-    created: "2021-11-16T15:34:03.86984+08:00"
+    created: "2021-11-16T21:00:45.928986+08:00"
+    description: A Helm chart for Kubernetes
+    digest: ce861955e317064479998e36de8bffa70df749f878263d2d007113d9479ddb0f
+    name: skygear
+    type: application
+    urls:
+    - https://github.com/oursky/skygear-v1-helm/releases/download/skygear-0.5.0/skygear-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
+    appVersion: 1.x
+    created: "2021-11-16T21:00:45.593023+08:00"
     description: A Helm chart for Kubernetes
     digest: bd2c5f1d53658f0681484db5d55d274d1de19b91d380c951b1ca2bd95b150406
     name: skygear
@@ -13,7 +23,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 1.x
-    created: "2021-11-16T15:34:03.444017+08:00"
+    created: "2021-11-16T21:00:45.227256+08:00"
     description: A Helm chart for Kubernetes
     digest: f4625f081b535d0f666aaf521df7dd3e9fa2d7876e7082e64963688e0e9581ca
     name: skygear
@@ -23,7 +33,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 1.x
-    created: "2021-11-16T15:34:02.927849+08:00"
+    created: "2021-11-16T21:00:44.873929+08:00"
     description: A Helm chart for Kubernetes
     digest: 0327fe16d107490ef4d2a9b167bd37fa79bd58f6f9bcef548e4560ff258ae284
     name: skygear
@@ -33,7 +43,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 1.x
-    created: "2021-11-16T15:34:02.520831+08:00"
+    created: "2021-11-16T21:00:44.47007+08:00"
     description: A Helm chart for Kubernetes
     digest: a3701546de7cbaa520ec6b47894d9f37b77d8bc0da6e2608f372828c4d6019c8
     name: skygear
@@ -41,4 +51,4 @@ entries:
     urls:
     - https://github.com/oursky/skygear-v1-helm/releases/download/skygear-0.1.0/skygear-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-16T15:34:01.878149+08:00"
+generated: "2021-11-16T21:00:43.91968+08:00"
