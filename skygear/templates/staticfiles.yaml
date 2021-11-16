@@ -25,7 +25,6 @@ spec:
   replicas: {{ .Values.staticfiles.replicas }}
   selector:
     matchLabels:
-      {{- include "skygear.labels" . | nindent 6 }}
       app: {{ include "skygear.staticfiles.name" . | quote }}
   template:
     metadata:

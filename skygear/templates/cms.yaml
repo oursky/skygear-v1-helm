@@ -24,7 +24,6 @@ spec:
   replicas: {{ .Values.cms.replicas }}
   selector:
     matchLabels:
-      {{- include "skygear.labels" . | nindent 6 }}
       app: {{ include "skygear.cms.name" . | quote }}
   template:
     metadata:

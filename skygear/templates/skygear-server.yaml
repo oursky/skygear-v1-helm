@@ -37,7 +37,6 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "skygear.labels" . | nindent 6 }}
       app: {{ include "skygear.skygear-server.name" . | quote }}
       variant: {{ include "skygear.skygear-server.master.name" . | quote }}
   template:
@@ -70,7 +69,6 @@ spec:
   replicas: {{ .Values.skygearServer.slaveCount }}
   selector:
     matchLabels:
-      {{- include "skygear.labels" . | nindent 6 }}
       app: {{ include "skygear.skygear-server.name" . | quote }}
       variant: {{ include "skygear.skygear-server.slave.name" . | quote }}
   template:

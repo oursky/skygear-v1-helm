@@ -24,7 +24,6 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "skygear.labels" . | nindent 6 }}
       app: {{ include "skygear.pgbouncer.name" . | quote }}
   template:
     metadata:

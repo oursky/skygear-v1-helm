@@ -24,7 +24,6 @@ spec:
   replicas: {{ .Values.pluginnodejs.replicas }}
   selector:
     matchLabels:
-      {{- include "skygear.labels" . | nindent 6 }}
       app: {{ include "skygear.pluginnodejs.name" . | quote }}
   template:
     metadata:
