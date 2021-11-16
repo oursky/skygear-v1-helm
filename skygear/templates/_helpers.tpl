@@ -65,6 +65,18 @@
     secretKeyRef:
       name: {{ include "skygear.secret.name" . | quote }}
       key: MASTER_KEY
+- name: TOKEN_STORE_SECRET
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "skygear.secret.name" . | quote }}
+      key: TOKEN_STORE_SECRET
+{{- if .Values.customTokenSecret }}
+- name: CUSTOM_TOKEN_SECRET
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "skygear.secret.name" . | quote }}
+      key: CUSTOM_TOKEN_SECRET
+{{- end }}
 {{- if .Values.fcmSecretName }}
 - name: FCM_SERVICE_ACCOUNT_KEY
   valueFrom:
